@@ -31,6 +31,20 @@ export async function getEquipmentById(
 	}
 }
 
+export async function getEquipmentRequestsById(
+	req: Request<EquipmentIdParams>,
+	res: Response,
+	next: NextFunction
+) {
+	try {
+		const requests = await equipmentService.getEquipmentRequestsById(req.params.id)
+
+		res.json({ data: requests })
+	} catch (err) {
+		next(err)
+	}
+}
+
 export async function createEquipment(req: Request, res: Response, next: NextFunction) {
 	try {
 		const equipment = await equipmentService.createEquipment(req.body)

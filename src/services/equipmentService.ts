@@ -77,6 +77,12 @@ export async function getEquipmentById(id: string) {
 	return equipment
 }
 
+export async function getEquipmentRequestsById(id: string) {
+	await getEquipmentById(id)
+
+	return requestRepository.findByEquipmentId(id)
+}
+
 export async function findEquipmentBySerialNumber(serialNumber: string) {
 	return equipmentRepository.findBySerialNumber(serialNumber)
 }
