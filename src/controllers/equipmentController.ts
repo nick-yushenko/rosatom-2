@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from 'express'
 
 import * as equipmentService from '@/services/equipmentService'
+import * as weatherService from '@/services/weatherService'
 import { EquipmentListQuery } from '@/validators/equipmentValidator'
 
 type EquipmentIdParams = {
@@ -40,6 +41,20 @@ export async function getEquipmentRequestsById(
 		const requests = await equipmentService.getEquipmentRequestsById(req.params.id)
 
 		res.json({ data: requests })
+	} catch (err) {
+		next(err)
+	}
+}
+
+export async function getEquipmentWeatherById(
+	req: Request<EquipmentIdParams>,
+	res: Response,
+	next: NextFunction
+) {
+	try {
+		const weather = await weatherService.getEquipmentWeatherById(req.params.id)
+
+		res.json({ data: weather })
 	} catch (err) {
 		next(err)
 	}

@@ -12,6 +12,7 @@ import {
 	deleteEquipmentById,
 	getEquipmentById,
 	getEquipmentRequestsById,
+	getEquipmentWeatherById,
 	getEquipments,
 	updateEquipmentById,
 } from '@/controllers/equipmentController'
@@ -19,6 +20,7 @@ import {
 const router = Router()
 
 router.get('/', validate({ query: equipmentListQuerySchema }), getEquipments)
+router.get('/:id/weather', validate({ params: equipmentIdParamsSchema }), getEquipmentWeatherById)
 router.get('/:id/requests', validate({ params: equipmentIdParamsSchema }), getEquipmentRequestsById)
 router.get('/:id', validate({ params: equipmentIdParamsSchema }), getEquipmentById)
 

@@ -1,4 +1,427 @@
 {
-  "equipment": [],
-  "requests": []
+  "equipment": [
+    {
+      "id": "f1fd5a7b-135a-4356-88b4-7d515194745d",
+      "name": "Ветрогенератор ВГ-03",
+      "type": "turbine",
+      "serialNumber": "WG-2046-1111",
+      "location": {
+        "lat": 47.2357,
+        "lon": 39.7015
+      },
+      "status": "operational",
+      "installedAt": "2025-06-10T09:00:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58001",
+      "name": "Ветрогенератор ВГ-01",
+      "type": "turbine",
+      "serialNumber": "WG-2025-001",
+      "location": {
+        "lat": 47.2221,
+        "lon": 39.7203
+      },
+      "status": "operational",
+      "installedAt": "2025-01-18T09:15:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58002",
+      "name": "Ветрогенератор ВГ-02",
+      "type": "turbine",
+      "serialNumber": "WG-2024-002",
+      "location": {
+        "lat": 46.3497,
+        "lon": 48.0408
+      },
+      "status": "maintenance",
+      "installedAt": "2024-06-25T10:45:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58003",
+      "name": "Ветрогенератор ВГ-04",
+      "type": "turbine",
+      "serialNumber": "WG-2023-004",
+      "location": {
+        "lat": 52.2871,
+        "lon": 104.2807
+      },
+      "status": "fault",
+      "installedAt": "2023-03-08T06:55:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58004",
+      "name": "Ветрогенератор ВГ-05",
+      "type": "turbine",
+      "serialNumber": "WG-2022-005",
+      "location": {
+        "lat": 62.0272,
+        "lon": 129.7322
+      },
+      "status": "decommissioned",
+      "installedAt": "2022-12-11T12:30:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58005",
+      "name": "Ветрогенератор ВГ-06",
+      "type": "turbine",
+      "serialNumber": "WG-2026-006",
+      "location": {
+        "lat": 44.6167,
+        "lon": 33.5254
+      },
+      "status": "operational",
+      "installedAt": "2026-02-04T08:00:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58006",
+      "name": "Инвертор ИНВ-01",
+      "type": "inverter",
+      "serialNumber": "INV-2024-001",
+      "location": {
+        "lat": 55.7558,
+        "lon": 37.6173
+      },
+      "status": "operational",
+      "installedAt": "2024-03-15T08:30:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58007",
+      "name": "Инвертор ИНВ-02",
+      "type": "inverter",
+      "serialNumber": "INV-2023-002",
+      "location": {
+        "lat": 59.9343,
+        "lon": 30.3351
+      },
+      "status": "maintenance",
+      "installedAt": "2023-11-20T10:15:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58008",
+      "name": "Инвертор ИНВ-03",
+      "type": "inverter",
+      "serialNumber": "INV-2022-003",
+      "location": {
+        "lat": 56.8389,
+        "lon": 60.6057
+      },
+      "status": "fault",
+      "installedAt": "2022-07-05T12:00:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58009",
+      "name": "Инвертор ИНВ-04",
+      "type": "inverter",
+      "serialNumber": "INV-2021-004",
+      "location": {
+        "lat": 54.9833,
+        "lon": 82.8964
+      },
+      "status": "decommissioned",
+      "installedAt": "2021-02-18T07:45:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58010",
+      "name": "Инвертор ИНВ-05",
+      "type": "inverter",
+      "serialNumber": "INV-2025-005",
+      "location": {
+        "lat": 45.0355,
+        "lon": 38.9753
+      },
+      "status": "operational",
+      "installedAt": "2025-09-03T14:10:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58011",
+      "name": "Инвертор ИНВ-06",
+      "type": "inverter",
+      "serialNumber": "INV-2024-006",
+      "location": {
+        "lat": 53.1959,
+        "lon": 50.1002
+      },
+      "status": "maintenance",
+      "installedAt": "2024-12-01T09:40:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58012",
+      "name": "Датчик температуры ДТ-01",
+      "type": "sensor",
+      "serialNumber": "SNS-T-2026-001",
+      "location": {
+        "lat": 43.5855,
+        "lon": 39.7231
+      },
+      "status": "operational",
+      "installedAt": "2026-01-12T06:20:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58013",
+      "name": "Датчик вибрации ДВ-02",
+      "type": "sensor",
+      "serialNumber": "SNS-V-2025-002",
+      "location": {
+        "lat": 55.0084,
+        "lon": 82.9357
+      },
+      "status": "maintenance",
+      "installedAt": "2025-05-22T11:25:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58014",
+      "name": "Датчик давления ДД-03",
+      "type": "sensor",
+      "serialNumber": "SNS-P-2024-003",
+      "location": {
+        "lat": 51.5336,
+        "lon": 46.0343
+      },
+      "status": "fault",
+      "installedAt": "2024-04-14T08:05:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58015",
+      "name": "Датчик влажности ДВЛ-04",
+      "type": "sensor",
+      "serialNumber": "SNS-H-2023-004",
+      "location": {
+        "lat": 48.7071,
+        "lon": 44.5169
+      },
+      "status": "decommissioned",
+      "installedAt": "2023-05-09T13:35:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58016",
+      "name": "Датчик температуры ДТ-05",
+      "type": "sensor",
+      "serialNumber": "SNS-T-2022-005",
+      "location": {
+        "lat": 58.0105,
+        "lon": 56.2502
+      },
+      "status": "operational",
+      "installedAt": "2022-01-27T16:50:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58017",
+      "name": "Датчик вибрации ДВ-06",
+      "type": "sensor",
+      "serialNumber": "SNS-V-2021-006",
+      "location": {
+        "lat": 57.153,
+        "lon": 65.5343
+      },
+      "status": "maintenance",
+      "installedAt": "2021-09-16T05:20:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58018",
+      "name": "Датчик давления ДД-07",
+      "type": "sensor",
+      "serialNumber": "SNS-P-2020-007",
+      "location": {
+        "lat": 55.0302,
+        "lon": 73.3686
+      },
+      "status": "fault",
+      "installedAt": "2020-10-03T15:10:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58019",
+      "name": "Подстанция ПС-110-01",
+      "type": "substation",
+      "serialNumber": "SUB-110-2020-001",
+      "location": {
+        "lat": 47.2357,
+        "lon": 39.7015
+      },
+      "status": "operational",
+      "installedAt": "2020-08-30T05:00:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58020",
+      "name": "Подстанция ПС-220-02",
+      "type": "substation",
+      "serialNumber": "SUB-220-2019-002",
+      "location": {
+        "lat": 51.7682,
+        "lon": 55.0969
+      },
+      "status": "maintenance",
+      "installedAt": "2019-10-14T08:05:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58021",
+      "name": "Подстанция ПС-330-03",
+      "type": "substation",
+      "serialNumber": "SUB-330-2018-003",
+      "location": {
+        "lat": 53.5078,
+        "lon": 49.4204
+      },
+      "status": "fault",
+      "installedAt": "2018-05-09T13:35:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58022",
+      "name": "Подстанция ПС-500-04",
+      "type": "substation",
+      "serialNumber": "SUB-500-2017-004",
+      "location": {
+        "lat": 56.3269,
+        "lon": 44.0059
+      },
+      "status": "decommissioned",
+      "installedAt": "2017-01-27T16:50:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58023",
+      "name": "Подстанция ПС-750-05",
+      "type": "substation",
+      "serialNumber": "SUB-750-2021-005",
+      "location": {
+        "lat": 55.1644,
+        "lon": 61.4368
+      },
+      "status": "operational",
+      "installedAt": "2021-06-18T10:00:00.000Z"
+    },
+    {
+      "id": "0d05d794-52b9-4c81-9f2c-36b63fa58024",
+      "name": "Подстанция ПС-110-06",
+      "type": "substation",
+      "serialNumber": "SUB-110-2022-006",
+      "location": {
+        "lat": 54.7351,
+        "lon": 55.9587
+      },
+      "status": "maintenance",
+      "installedAt": "2022-09-02T12:00:00.000Z"
+    }
+  ],
+  "requests": [
+    {
+      "id": "f06cb709-caeb-4578-89de-8eed78b2da90",
+      "equipmentId": "f1fd5a7b-135a-4356-88b4-7d515194745d",
+      "title": "Проверить оборудование",
+      "description": "Плановая заявка на диагностику оборудования",
+      "priority": "medium",
+      "status": "new",
+      "plannedAt": "2026-10-01T09:00:00.000Z",
+      "createdAt": "2026-09-20T18:11:56.874Z",
+      "updatedAt": "2026-09-20T18:11:56.874Z"
+    },
+    {
+      "id": "9f40d344-3348-4b6e-a356-1d25cc350001",
+      "equipmentId": "0d05d794-52b9-4c81-9f2c-36b63fa58002",
+      "title": "Проверить шум редуктора",
+      "description": "Оператор зафиксировал повышенный шум при запуске.",
+      "priority": "high",
+      "status": "new",
+      "plannedAt": "2026-10-03T08:30:00.000Z",
+      "createdAt": "2026-09-20T08:10:00.000Z",
+      "updatedAt": "2026-09-20T08:10:00.000Z"
+    },
+    {
+      "id": "9f40d344-3348-4b6e-a356-1d25cc350002",
+      "equipmentId": "0d05d794-52b9-4c81-9f2c-36b63fa58008",
+      "title": "Диагностика инвертора",
+      "description": "Периодические просадки выходного напряжения.",
+      "priority": "critical",
+      "status": "in_progress",
+      "plannedAt": "2026-09-25T11:00:00.000Z",
+      "createdAt": "2026-09-18T13:40:00.000Z",
+      "updatedAt": "2026-09-19T09:00:00.000Z"
+    },
+    {
+      "id": "9f40d344-3348-4b6e-a356-1d25cc350003",
+      "equipmentId": "0d05d794-52b9-4c81-9f2c-36b63fa58012",
+      "title": "Калибровка датчика температуры",
+      "description": "Показания отличаются от контрольного прибора.",
+      "priority": "medium",
+      "status": "new",
+      "plannedAt": "2026-10-05T09:00:00.000Z",
+      "createdAt": "2026-09-17T15:25:00.000Z",
+      "updatedAt": "2026-09-17T15:25:00.000Z"
+    },
+    {
+      "id": "9f40d344-3348-4b6e-a356-1d25cc350004",
+      "equipmentId": "0d05d794-52b9-4c81-9f2c-36b63fa58014",
+      "title": "Замена датчика давления",
+      "description": "Датчик не проходит самодиагностику.",
+      "priority": "high",
+      "status": "in_progress",
+      "plannedAt": "2026-09-24T14:00:00.000Z",
+      "createdAt": "2026-09-16T10:00:00.000Z",
+      "updatedAt": "2026-09-20T07:45:00.000Z"
+    },
+    {
+      "id": "9f40d344-3348-4b6e-a356-1d25cc350005",
+      "equipmentId": "0d05d794-52b9-4c81-9f2c-36b63fa58019",
+      "title": "Осмотр секции шин",
+      "description": "Нужен внеплановый осмотр после скачка нагрузки.",
+      "priority": "medium",
+      "status": "done",
+      "plannedAt": "2026-09-21T12:00:00.000Z",
+      "createdAt": "2026-09-12T09:30:00.000Z",
+      "updatedAt": "2026-09-18T16:20:00.000Z"
+    },
+    {
+      "id": "9f40d344-3348-4b6e-a356-1d25cc350006",
+      "equipmentId": "0d05d794-52b9-4c81-9f2c-36b63fa58021",
+      "title": "Проверить защитное реле",
+      "description": "Срабатывание защиты без подтвержденной аварии.",
+      "priority": "critical",
+      "status": "new",
+      "plannedAt": "2026-09-26T07:30:00.000Z",
+      "createdAt": "2026-09-19T06:50:00.000Z",
+      "updatedAt": "2026-09-19T06:50:00.000Z"
+    },
+    {
+      "id": "9f40d344-3348-4b6e-a356-1d25cc350007",
+      "equipmentId": "0d05d794-52b9-4c81-9f2c-36b63fa58007",
+      "title": "Проверить систему охлаждения",
+      "description": "Температура корпуса выше обычных значений.",
+      "priority": "high",
+      "status": "rejected",
+      "plannedAt": "2026-09-28T10:30:00.000Z",
+      "createdAt": "2026-09-10T12:15:00.000Z",
+      "updatedAt": "2026-09-11T08:00:00.000Z"
+    },
+    {
+      "id": "9f40d344-3348-4b6e-a356-1d25cc350008",
+      "equipmentId": "0d05d794-52b9-4c81-9f2c-36b63fa58017",
+      "title": "Поверка датчика вибрации",
+      "description": "Плановая поверка по графику обслуживания.",
+      "priority": "low",
+      "status": "done",
+      "plannedAt": "2026-09-29T13:00:00.000Z",
+      "createdAt": "2026-09-08T11:20:00.000Z",
+      "updatedAt": "2026-09-15T17:10:00.000Z"
+    },
+    {
+      "id": "9f40d344-3348-4b6e-a356-1d25cc350009",
+      "equipmentId": "0d05d794-52b9-4c81-9f2c-36b63fa58023",
+      "title": "Обслуживание ячейки ввода",
+      "description": "Проверить контакты и состояние изоляции.",
+      "priority": "medium",
+      "status": "in_progress",
+      "plannedAt": "2026-10-08T08:00:00.000Z",
+      "createdAt": "2026-09-14T14:45:00.000Z",
+      "updatedAt": "2026-09-20T09:30:00.000Z"
+    },
+    {
+      "id": "9f40d344-3348-4b6e-a356-1d25cc350010",
+      "equipmentId": "0d05d794-52b9-4c81-9f2c-36b63fa58024",
+      "title": "Проверить телеметрию подстанции",
+      "description": "В диспетчерской пропадают показания по двум каналам.",
+      "priority": "high",
+      "status": "new",
+      "plannedAt": "2026-10-10T15:30:00.000Z",
+      "createdAt": "2026-09-20T10:05:00.000Z",
+      "updatedAt": "2026-09-20T10:05:00.000Z"
+    }
+  ]
 }
