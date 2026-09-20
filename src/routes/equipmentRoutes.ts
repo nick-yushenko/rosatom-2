@@ -11,6 +11,7 @@ import {
 	createEquipment,
 	deleteEquipmentById,
 	getEquipmentById,
+	getEquipmentRequestsById,
 	getEquipments,
 	updateEquipmentById,
 } from '@/controllers/equipmentController'
@@ -18,6 +19,7 @@ import {
 const router = Router()
 
 router.get('/', validate({ query: equipmentListQuerySchema }), getEquipments)
+router.get('/:id/requests', validate({ params: equipmentIdParamsSchema }), getEquipmentRequestsById)
 router.get('/:id', validate({ params: equipmentIdParamsSchema }), getEquipmentById)
 
 router.post('/', validate({ body: createEquipmentSchema }), createEquipment)

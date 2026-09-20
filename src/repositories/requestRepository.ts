@@ -6,6 +6,11 @@ export async function findAll() {
 	return db.requests as MaintenanceRequest[]
 }
 
+export async function findByEquipmentId(equipmentId: string) {
+	const db = await readDb()
+	return db.requests.filter((request) => request.equipmentId === equipmentId)
+}
+
 export async function findActiveByEquipmentId(equipmentId: string) {
 	const db = await readDb()
 	return db.requests.filter(
