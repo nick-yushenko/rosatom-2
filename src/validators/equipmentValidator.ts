@@ -16,7 +16,6 @@ export const createEquipmentSchema = z.object({
 		message: 'Недопустимый тип оборудования',
 	}),
 
-	// TODO сделать уникальным в рамках системы (JSON-хранилища)
 	serialNumber: z.string().trim().min(1, 'Серийный номер обязателен'),
 
 	location: z.object({
@@ -51,6 +50,7 @@ export const updateEquipmentSchema = z
 		status: createEquipmentSchema.shape.status.optional(),
 		installedAt: createEquipmentSchema.shape.installedAt.optional(),
 	})
+	.strict()
 	.refine((data) => Object.keys(data).length > 0, {
 		message: 'Нужно передать хотя бы одно поле для обновления',
 	})
@@ -59,9 +59,34 @@ export const equipmentListQuerySchema = z.object({
 	status: z.enum(equipmentStatuses).optional(),
 	type: z.enum(equipmentTypes).optional(),
 
-	page: z.coerce.number().int().positive().default(1),
-	limit: z.coerce.number().int().positive().max(100).default(20),
+	installedFrom: z.iso.datetime({ error: 'installedFrom должен быть ISO-дата-время' }).optional(),
+	installedTo: z.iso.datetime({ error: 'installedTo должен быть ISO-дата-время' }).optional(),
 
-	sortBy: z.enum(['name', 'type', 'status', 'installedAt']).optional(),
-	sortOrder: z.enum(['asc', 'desc']).default('asc'),
+	page: z.coerce
+		.number({ error: 'page должен быть числом' })
+		.int('page должен быть целым числом')
+		.positive('page должен быть больше 0')
+		.default(1),
+
+	limit: z.coerce
+		.number({ error: 'limit должен быть числом' })
+		.int('limit должен быть целым числом')
+		.positive('limit должен быть больше 0')
+		.max(100, 'limit не должен быть больше 100')
+		.default(20),
+
+	sortBy: z
+		.enum(['name', 'type', 'status', 'installedAt'], {
+			error: 'sortBy должен быть одним из: name, type, status, installedAt',
+		})
+		.optional()
+		.default('name'),
+
+	sortOrder: z
+		.enum(['asc', 'desc'], {
+			error: 'sortOrder должен быть asc или desc',
+		})
+		.default('asc'),
 })
+
+export type EquipmentListQuery = z.infer<typeof equipmentListQuerySchema>
