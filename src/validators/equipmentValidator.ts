@@ -1,7 +1,5 @@
+import { equipmentStatuses, equipmentTypes } from '@/types/equipments'
 import * as z from 'zod'
-
-const equipmentTypes = ['turbine', 'inverter', 'sensor', 'substation'] as const
-const equipmentStatuses = ['operational', 'maintenance', 'fault', 'decommissioned'] as const
 
 export const equipmentIdParamsSchema = z.object({
 	id: z.uuid({ error: 'Некорректный id оборудования' }),

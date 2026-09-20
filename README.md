@@ -59,3 +59,13 @@ import { logger } from '@/logs/logger'
 	}
 }
 ```
+
+Хранение данных
+JSON-хранилище
+data/db.json
+
+Для копирования примера БД, перед первым запуском
+
+```bash
+cp data/db.example.json data/db.json
+```
