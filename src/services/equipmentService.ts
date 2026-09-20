@@ -2,6 +2,7 @@ import crypto from 'node:crypto'
 
 import { NotFoundError } from '@/errors/NotFoundError'
 import * as equipmentRepository from '@/repositories/equipmentRepository'
+import * as requestRepository from '@/repositories/requestRepository'
 import { CreateEquipmentDto, Equipment, UpdateEquipmentDto } from '@/types/equipments'
 import { EquipmentListQuery } from '@/validators/equipmentValidator'
 import { ConflictError } from '@/errors/ConflictError'
@@ -119,5 +120,16 @@ export async function deleteEquipmentById(id: string) {
 
 	if (!deleted) {
 		throw new NotFoundError('Оборудование не найдено')
+	}
+
+	const requests = await requestRepository.findActiveByEquipmentId(id)
+
+	if (requests.length > 0) {
+		throw new ConflictError('Нельзя удалить оборудование, по которому есть активные заявки', [
+			{
+				field: 'id',
+				message: 'Сначала удалите или завершите связанные заявки',
+			},
+		])
 	}
 }

@@ -2,7 +2,6 @@ import type { NextFunction, Request, Response } from 'express'
 
 import * as equipmentService from '@/services/equipmentService'
 import { EquipmentListQuery } from '@/validators/equipmentValidator'
-import { ConflictError } from '@/errors/ConflictError'
 
 type EquipmentIdParams = {
 	id: string

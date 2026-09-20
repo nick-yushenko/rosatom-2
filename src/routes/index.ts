@@ -8,6 +8,6 @@ const router = Router()
 
 router.use('/health', healthRoutes)
 router.use('/equipment', equipmentRoutes)
-router.use('/request', requestRoutes)
+router.use('/requests', requestRoutes)
 
 export default router

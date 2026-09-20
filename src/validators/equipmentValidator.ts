@@ -1,5 +1,6 @@
 import { equipmentStatuses, equipmentTypes } from '@/types/equipments'
 import * as z from 'zod'
+import { paginationQueryShape, sortOrderSchema } from './commonValidator'
 
 export const equipmentIdParamsSchema = z.object({
 	id: z.uuid({ error: 'Некорректный id оборудования' }),
@@ -55,38 +56,23 @@ export const updateEquipmentSchema = z
 		message: 'Нужно передать хотя бы одно поле для обновления',
 	})
 
-export const equipmentListQuerySchema = z.object({
-	status: z.enum(equipmentStatuses).optional(),
-	type: z.enum(equipmentTypes).optional(),
+export const equipmentListQuerySchema = z
+	.object({
+		status: z.enum(equipmentStatuses).optional(),
+		type: z.enum(equipmentTypes).optional(),
 
-	installedFrom: z.iso.datetime({ error: 'installedFrom должен быть ISO-дата-время' }).optional(),
-	installedTo: z.iso.datetime({ error: 'installedTo должен быть ISO-дата-время' }).optional(),
+		installedFrom: z.iso.datetime({ error: 'installedFrom должен быть ISO-дата-время' }).optional(),
+		installedTo: z.iso.datetime({ error: 'installedTo должен быть ISO-дата-время' }).optional(),
 
-	page: z.coerce
-		.number({ error: 'page должен быть числом' })
-		.int('page должен быть целым числом')
-		.positive('page должен быть больше 0')
-		.default(1),
+		sortBy: z
+			.enum(['name', 'type', 'status', 'installedAt'], {
+				error: 'sortBy должен быть одним из: name, type, status, installedAt',
+			})
+			.optional()
+			.default('name'),
 
-	limit: z.coerce
-		.number({ error: 'limit должен быть числом' })
-		.int('limit должен быть целым числом')
-		.positive('limit должен быть больше 0')
-		.max(100, 'limit не должен быть больше 100')
-		.default(20),
-
-	sortBy: z
-		.enum(['name', 'type', 'status', 'installedAt'], {
-			error: 'sortBy должен быть одним из: name, type, status, installedAt',
-		})
-		.optional()
-		.default('name'),
-
-	sortOrder: z
-		.enum(['asc', 'desc'], {
-			error: 'sortOrder должен быть asc или desc',
-		})
-		.default('asc'),
-})
+		sortOrder: sortOrderSchema,
+	})
+	.extend(paginationQueryShape)
 
 export type EquipmentListQuery = z.infer<typeof equipmentListQuerySchema>
