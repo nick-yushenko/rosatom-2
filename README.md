@@ -26,23 +26,31 @@ npm run format:check
 
 ## Переменные окружения
 
-| Переменная | Описание | Значение по умолчанию |
-| --- | --- | --- |
-| `NODE_ENV` | Окружение запуска | `development` |
-| `PORT` | Порт сервера | `3000` |
-| `CORS_ORIGIN` | Разрешенный origin для CORS | `*` |
-| `LOG_LEVEL` | Уровень логирования | `info` |
+| Переменная                     | Описание                                               | Значение по умолчанию                    |
+| ------------------------------ | ------------------------------------------------------ | ---------------------------------------- |
+| `NODE_ENV`                     | Окружение запуска                                      | `development`                            |
+| `PORT`                         | Порт сервера                                           | `3000`                                   |
+| `CORS_ORIGIN`                  | Разрешенный origin для CORS                            | `*`                                      |
+| `LOG_LEVEL`                    | Уровень логирования                                    | `info`                                   |
+| `WEATHER_FORECAST_API_URL`     | URL API прогноза погоды                                | `https://api.open-meteo.com/v1/forecast` |
+| `WEATHER_FORECAST_DAYS`        | Количество дней прогноза                               | `3`                                      |
+| `WEATHER_API_TIMEOUT_MS`       | Таймаут запроса к погодному API в миллисекундах        | `5000`                                   |
+| `WEATHER_MIN_TEMPERATURE_C`    | Минимальная температура для пригодности работ          | `-15`                                    |
+| `WEATHER_MAX_TEMPERATURE_C`    | Максимальная температура для пригодности работ         | `25`                                     |
+| `WEATHER_MAX_WIND_SPEED_MS`    | Максимальная скорость ветра для пригодности работ, м/с | `3`                                      |
+| `WEATHER_MAX_PRECIPITATION_MM` | Максимальные осадки для пригодности работ, мм          | `1`                                      |
 
 ## Таблица эндпоинтов
 
-| Метод | Путь | Что делает |
-| --- | --- | --- |
-| `GET` | `/api/health` | Проверяет состояние API |
-| `GET` | `/api/equipment` | Возвращает список оборудования с фильтрацией, сортировкой и пагинацией |
-| `GET` | `/api/equipment/:id` | Возвращает оборудование по id |
-| `POST` | `/api/equipment` | Создает оборудование |
-| `PATCH` | `/api/equipment/:id` | Частично обновляет оборудование |
-| `DELETE` | `/api/equipment/:id` | Удаляет оборудование |
+| Метод    | Путь                         | Что делает                                                                |
+| -------- | ---------------------------- | ------------------------------------------------------------------------- |
+| `GET`    | `/api/health`                | Проверяет состояние API                                                   |
+| `GET`    | `/api/equipment`             | Возвращает список оборудования с фильтрацией, сортировкой и пагинацией    |
+| `GET`    | `/api/equipment/:id`         | Возвращает оборудование по id                                             |
+| `GET`    | `/api/equipment/:id/weather` | Возвращает прогноз погоды по координатам оборудования и пригодность работ |
+| `POST`   | `/api/equipment`             | Создает оборудование                                                      |
+| `PATCH`  | `/api/equipment/:id`         | Частично обновляет оборудование                                           |
+| `DELETE` | `/api/equipment/:id`         | Удаляет оборудование                                                      |
 
 ## Модель оборудования
 
@@ -75,16 +83,16 @@ GET /api/equipment?status=operational&type=turbine&page=1&limit=20&sortBy=name&s
 
 Query-параметры:
 
-| Параметр | Описание | Пример |
-| --- | --- | --- |
-| `status` | Фильтр по статусу | `operational` |
-| `type` | Фильтр по типу | `turbine` |
-| `installedFrom` | Дата установки от | `2024-01-01T00:00:00.000Z` |
-| `installedTo` | Дата установки до | `2025-12-31T23:59:59.999Z` |
-| `page` | Номер страницы | `1` |
-| `limit` | Количество записей на странице, максимум `100` | `20` |
-| `sortBy` | Поле сортировки: `name`, `type`, `status`, `installedAt` | `name` |
-| `sortOrder` | Направление сортировки: `asc` или `desc` | `asc` |
+| Параметр        | Описание                                                 | Пример                     |
+| --------------- | -------------------------------------------------------- | -------------------------- |
+| `status`        | Фильтр по статусу                                        | `operational`              |
+| `type`          | Фильтр по типу                                           | `turbine`                  |
+| `installedFrom` | Дата установки от                                        | `2024-01-01T00:00:00.000Z` |
+| `installedTo`   | Дата установки до                                        | `2025-12-31T23:59:59.999Z` |
+| `page`          | Номер страницы                                           | `1`                        |
+| `limit`         | Количество записей на странице, максимум `100`           | `20`                       |
+| `sortBy`        | Поле сортировки: `name`, `type`, `status`, `installedAt` | `name`                     |
+| `sortOrder`     | Направление сортировки: `asc` или `desc`                 | `asc`                      |
 
 Пример ответа:
 
@@ -132,6 +140,61 @@ GET /api/equipment/550e8400-e29b-41d4-a716-446655440000
 		},
 		"status": "operational",
 		"installedAt": "2024-05-10T09:00:00.000Z"
+	}
+}
+```
+
+## GET /api/equipment/:id/weather
+
+Ручка берет координаты из `location` оборудования, запрашивает прогноз во внешнем погодном API и возвращает признак пригодности работ.
+
+Правила пригодности:
+
+- температура от `-15` до `25` °C;
+- скорость ветра не больше `3` м/с;
+- осадки не больше `1` мм.
+
+Значения правил настраиваются через переменные окружения `WEATHER_MIN_TEMPERATURE_C`, `WEATHER_MAX_TEMPERATURE_C`, `WEATHER_MAX_WIND_SPEED_MS` и `WEATHER_MAX_PRECIPITATION_MM`.
+
+```http
+GET /api/equipment/550e8400-e29b-41d4-a716-446655440000/weather
+```
+
+```json
+{
+	"data": {
+		"equipment": {
+			"id": "550e8400-e29b-41d4-a716-446655440000",
+			"name": "Турбина Т-100",
+			"location": {
+				"lat": 55.751244,
+				"lon": 37.618423
+			}
+		},
+		"forecast": {
+			"latitude": 55.75,
+			"longitude": 37.62,
+			"timezone": "Europe/Moscow",
+			"days": [
+				{
+					"date": "2026-09-20",
+					"temperatureMinC": 10.2,
+					"temperatureMaxC": 18.7,
+					"precipitationMm": 0.4,
+					"windSpeedMaxMs": 2.5
+				}
+			]
+		},
+		"suitability": {
+			"isSuitable": true,
+			"rules": {
+				"minTemperatureC": -15,
+				"maxTemperatureC": 25,
+				"maxWindSpeedMs": 3,
+				"maxPrecipitationMm": 1
+			},
+			"reasons": []
+		}
 	}
 }
 ```
@@ -291,6 +354,19 @@ GET /api/equipment?status=broken&page=1&limit=20
 				"message": "Серийный номер должен быть уникальным"
 			}
 		],
+		"requestId": "b1f2c3d4"
+	}
+}
+```
+
+Ошибка внешнего погодного API:
+
+```json
+{
+	"error": {
+		"code": "WEATHER_API_ERROR",
+		"message": "Не удалось подключиться к погодному API",
+		"details": [],
 		"requestId": "b1f2c3d4"
 	}
 }
