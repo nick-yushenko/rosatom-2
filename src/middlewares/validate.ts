@@ -21,16 +21,25 @@ export function validate(schemas: ValidationSchemas) {
 			}
 
 			if (schemas.query) {
-				req.query = schemas.query.parse(req.query) as typeof req.query
+				res.locals.query = schemas.query.parse(req.query)
 			}
 
 			return next()
 		} catch (err) {
 			if (err instanceof z.ZodError) {
-				const details = err.issues.map((issue) => ({
-					field: issue.path.join('.'),
-					message: issue.message,
-				}))
+				const details = err.issues.map((issue) => {
+					if (issue.code === 'unrecognized_keys') {
+						return {
+							field: issue.keys.join(', '),
+							message: 'Переданые поля не поддерживаются',
+						}
+					}
+
+					return {
+						field: issue.path.join('.'),
+						message: issue.message,
+					}
+				})
 
 				return next(new ValidationError(details))
 			}

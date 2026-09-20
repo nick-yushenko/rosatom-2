@@ -11,6 +11,11 @@ export async function findById(id: string) {
 	return db.equipment.find((e) => e.id === id) || null
 }
 
+export async function findBySerialNumber(serialNumber: string) {
+	const db = await readDb()
+	return db.equipment.find((e) => e.serialNumber === serialNumber) || null
+}
+
 export async function create(equipment: Equipment) {
 	const db = await readDb()
 	db.equipment.push(equipment)

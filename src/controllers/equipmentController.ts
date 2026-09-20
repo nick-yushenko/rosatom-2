@@ -1,6 +1,8 @@
 import type { NextFunction, Request, Response } from 'express'
 
 import * as equipmentService from '@/services/equipmentService'
+import { EquipmentListQuery } from '@/validators/equipmentValidator'
+import { ConflictError } from '@/errors/ConflictError'
 
 type EquipmentIdParams = {
 	id: string
@@ -8,8 +10,9 @@ type EquipmentIdParams = {
 
 export async function getEquipments(req: Request, res: Response, next: NextFunction) {
 	try {
-		const equipment = await equipmentService.getEquipments()
-		res.json({ data: equipment })
+		const query = res.locals.query as EquipmentListQuery
+		const equipment = await equipmentService.getEquipments(query)
+		res.json(equipment)
 	} catch (err) {
 		next(err)
 	}
