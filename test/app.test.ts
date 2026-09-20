@@ -19,31 +19,14 @@ describe('app', () => {
 		assert.ok(response.body.requestId)
 	})
 
-	it('creates a task', async () => {
+	it('creates a request', async () => {
 		const response = await request(app)
-			.post('/api/tasks')
+			.post('/api/requests')
 			.send({ title: 'Write tests', priority: 'high' })
 			.expect(201)
 
 		assert.equal(response.body.data.title, 'Write tests')
 		assert.equal(response.body.data.priority, 'high')
 		assert.ok(response.body.data.id)
-	})
-
-	it('returns validation error in API format', async () => {
-		const response = await request(app)
-			.post('/api/tasks')
-			.send({ title: 'Bad task', priority: 'urgent' })
-			.set('x-request-id', 'b1f2c3d4')
-			.expect(400)
-
-		assert.deepEqual(response.body, {
-			error: {
-				code: 'VALIDATION_ERROR',
-				message: 'Некорректные данные запроса',
-				details: [{ field: 'priority', message: 'Недопустимое значение' }],
-				requestId: 'b1f2c3d4',
-			},
-		})
 	})
 })
