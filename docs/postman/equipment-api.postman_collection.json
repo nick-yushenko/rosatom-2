@@ -1,0 +1,925 @@
+{
+	"info": {
+		"_postman_id": "8e574a3a-8a5c-4c3e-9f45-0d8f5941f5d2",
+		"name": "Equipment API",
+		"description": "Коллекция для сдачи Equipment API. Покрывает health, оборудование, заявки на ремонт, погодный прогноз, переходы статусов и негативные сценарии 400/422, 404, 409, 429.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health",
+			"item": [
+				{
+					"name": "GET /api/health",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('200 OK', function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('returns health payload', function () {",
+									"  var json = pm.response.json();",
+									"  pm.expect(json.status).to.eql('ok');",
+									"  pm.expect(json.requestId).to.be.a('string');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/health",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "health"]
+						},
+						"description": "Проверка доступности API."
+					}
+				}
+			]
+		},
+		{
+			"name": "Equipment",
+			"item": [
+				{
+					"name": "GET /api/equipment - list with filters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('200 OK', function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('returns paginated equipment list', function () {",
+									"  var json = pm.response.json();",
+									"  pm.expect(json.data).to.be.an('array');",
+									"  pm.expect(json.pagination).to.include.keys(['page', 'limit', 'total', 'totalPages']);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/equipment?status=operational&type=turbine&page=1&limit=20&sortBy=name&sortOrder=asc",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "equipment"],
+							"query": [
+								{
+									"key": "status",
+									"value": "operational"
+								},
+								{
+									"key": "type",
+									"value": "turbine"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "sortBy",
+									"value": "name"
+								},
+								{
+									"key": "sortOrder",
+									"value": "asc"
+								}
+							]
+						},
+						"description": "Список оборудования с фильтрацией, сортировкой и пагинацией."
+					}
+				},
+				{
+					"name": "GET /api/equipment/:id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('200 OK', function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('returns equipment model', function () {",
+									"  var json = pm.response.json();",
+									"  pm.expect(json.data).to.include.keys(['id', 'name', 'type', 'serialNumber', 'location', 'status', 'installedAt']);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/equipment/{{equipmentId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "equipment", "{{equipmentId}}"]
+						},
+						"description": "Получение оборудования по UUID."
+					}
+				},
+				{
+					"name": "GET /api/equipment/:id/requests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('200 OK', function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('returns requests linked to equipment', function () {",
+									"  var json = pm.response.json();",
+									"  pm.expect(json.data).to.be.an('array');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/equipment/{{equipmentId}}/requests",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "equipment", "{{equipmentId}}", "requests"]
+						},
+						"description": "Список заявок на ремонт для конкретного оборудования."
+					}
+				},
+				{
+					"name": "GET /api/equipment/:id/weather",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('200 OK or weather upstream error', function () {",
+									"  pm.expect([200, 502, 504]).to.include(pm.response.code);",
+									"});",
+									"",
+									"if (pm.response.code === 200) {",
+									"  pm.test('returns weather suitability model', function () {",
+									"    var json = pm.response.json();",
+									"    pm.expect(json.data).to.include.keys(['equipment', 'forecast', 'suitability']);",
+									"  });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/equipment/{{equipmentId}}/weather",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "equipment", "{{equipmentId}}", "weather"]
+						},
+						"description": "Погодный прогноз по координатам оборудования. При недоступности внешнего API ожидается управляемая ошибка WEATHER_API_ERROR."
+					}
+				},
+				{
+					"name": "POST /api/equipment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('201 Created', function () {",
+									"  pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('stores created equipment id', function () {",
+									"  var json = pm.response.json();",
+									"  pm.expect(json.data.id).to.be.a('string');",
+									"  pm.collectionVariables.set('createdEquipmentId', json.data.id);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Тестовая турбина Postman\",\n  \"type\": \"turbine\",\n  \"serialNumber\": \"PM-{{$timestamp}}\",\n  \"location\": {\n    \"lat\": 55.751244,\n    \"lon\": 37.618423\n  },\n  \"status\": \"operational\",\n  \"installedAt\": \"2026-01-10T09:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/equipment",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "equipment"]
+						},
+						"description": "Создание оборудования. serialNumber динамический, чтобы повторные запуски не конфликтовали."
+					}
+				},
+				{
+					"name": "PATCH /api/equipment/:id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('200 OK', function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('updates equipment status', function () {",
+									"  var json = pm.response.json();",
+									"  pm.expect(json.data.status).to.eql('maintenance');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"maintenance\",\n  \"name\": \"Тестовая турбина Postman обновленная\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/equipment/{{createdEquipmentId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "equipment", "{{createdEquipmentId}}"]
+						},
+						"description": "Частичное обновление созданного в коллекции оборудования."
+					}
+				},
+				{
+					"name": "DELETE /api/equipment/:id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('204 No Content', function () {",
+									"  pm.response.to.have.status(204);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/equipment/{{createdEquipmentId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "equipment", "{{createdEquipmentId}}"]
+						},
+						"description": "Удаление оборудования, созданного запросом POST /api/equipment."
+					}
+				}
+			]
+		},
+		{
+			"name": "Maintenance Requests",
+			"item": [
+				{
+					"name": "GET /api/requests - list with filters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('200 OK', function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('returns paginated request list', function () {",
+									"  var json = pm.response.json();",
+									"  pm.expect(json.data).to.be.an('array');",
+									"  pm.expect(json.pagination).to.include.keys(['page', 'limit', 'total', 'totalPages']);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/requests?status=new&priority=high&page=1&limit=20&sortBy=createdAt&sortOrder=desc",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "requests"],
+							"query": [
+								{
+									"key": "status",
+									"value": "new"
+								},
+								{
+									"key": "priority",
+									"value": "high"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "sortBy",
+									"value": "createdAt"
+								},
+								{
+									"key": "sortOrder",
+									"value": "desc"
+								}
+							]
+						},
+						"description": "Список заявок с фильтрацией, сортировкой и пагинацией."
+					}
+				},
+				{
+					"name": "GET /api/requests/:id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('200 OK', function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('returns request model', function () {",
+									"  var json = pm.response.json();",
+									"  pm.expect(json.data).to.include.keys(['id', 'equipmentId', 'title', 'priority', 'status', 'plannedAt', 'createdAt', 'updatedAt']);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/requests/{{requestId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "requests", "{{requestId}}"]
+						},
+						"description": "Получение заявки на ремонт по UUID."
+					}
+				},
+				{
+					"name": "POST /api/requests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('201 Created', function () {",
+									"  pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('stores created request id and default status is new', function () {",
+									"  var json = pm.response.json();",
+									"  pm.expect(json.data.id).to.be.a('string');",
+									"  pm.expect(json.data.status).to.eql('new');",
+									"  pm.collectionVariables.set('createdRequestId', json.data.id);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"equipmentId\": \"{{equipmentId}}\",\n  \"title\": \"Проверка через Postman\",\n  \"description\": \"Тестовая заявка для сдачной коллекции\",\n  \"priority\": \"high\",\n  \"plannedAt\": \"2027-01-15T10:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/requests",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "requests"]
+						},
+						"description": "Создание заявки на ремонт. Статус создается как new."
+					}
+				},
+				{
+					"name": "PATCH /api/requests/:id/status - new to in_progress",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('200 OK', function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('updates request status', function () {",
+									"  var json = pm.response.json();",
+									"  pm.expect(json.data.status).to.eql('in_progress');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"in_progress\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/requests/{{createdRequestId}}/status",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "requests", "{{createdRequestId}}", "status"]
+						},
+						"description": "Разрешенный переход статуса заявки: new -> in_progress."
+					}
+				},
+				{
+					"name": "PATCH /api/requests/:id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('200 OK', function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('updates request fields', function () {",
+									"  var json = pm.response.json();",
+									"  pm.expect(json.data.priority).to.eql('critical');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Срочная проверка через Postman\",\n  \"priority\": \"critical\",\n  \"plannedAt\": \"2027-01-16T10:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/requests/{{createdRequestId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "requests", "{{createdRequestId}}"]
+						},
+						"description": "Частичное обновление заявки."
+					}
+				},
+				{
+					"name": "DELETE /api/requests/:id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('204 No Content', function () {",
+									"  pm.response.to.have.status(204);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/requests/{{createdRequestId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "requests", "{{createdRequestId}}"]
+						},
+						"description": "Удаление заявки, созданной запросом POST /api/requests."
+					}
+				}
+			]
+		},
+		{
+			"name": "Negative Scenarios",
+			"item": [
+				{
+					"name": "400/422 Validation - invalid equipment status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('validation error is 400 or 422', function () {",
+									"  pm.expect([400, 422]).to.include(pm.response.code);",
+									"});",
+									"",
+									"pm.test('returns standard error format', function () {",
+									"  var json = pm.response.json();",
+									"  pm.expect(json.error).to.include.keys(['code', 'message', 'details', 'requestId']);",
+									"  pm.expect(json.error.code).to.eql('VALIDATION_ERROR');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/equipment?status=broken&page=1&limit=20",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "equipment"],
+							"query": [
+								{
+									"key": "status",
+									"value": "broken"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "Негативный сценарий валидации. Текущая реализация возвращает 400; тест допускает 422 как допустимый вариант по критериям."
+					}
+				},
+				{
+					"name": "400 Invalid JSON",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('400 Bad Request', function () {",
+									"  pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('returns INVALID_JSON', function () {",
+									"  var json = pm.response.json();",
+									"  pm.expect(json.error.code).to.eql('INVALID_JSON');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Некорректный JSON\",\n  \"type\": \"turbine\",\n"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/equipment",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "equipment"]
+						},
+						"description": "Некорректное JSON-тело запроса."
+					}
+				},
+				{
+					"name": "404 Equipment not found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('404 Not Found', function () {",
+									"  pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test('returns NOT_FOUND', function () {",
+									"  var json = pm.response.json();",
+									"  pm.expect(json.error.code).to.eql('NOT_FOUND');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/equipment/{{notFoundId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "equipment", "{{notFoundId}}"]
+						},
+						"description": "UUID корректный, но записи нет."
+					}
+				},
+				{
+					"name": "409 Duplicate equipment serialNumber",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('409 Conflict', function () {",
+									"  pm.response.to.have.status(409);",
+									"});",
+									"",
+									"pm.test('returns CONFLICT', function () {",
+									"  var json = pm.response.json();",
+									"  pm.expect(json.error.code).to.eql('CONFLICT');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Дубликат серийного номера\",\n  \"type\": \"turbine\",\n  \"serialNumber\": \"{{existingSerialNumber}}\",\n  \"location\": {\n    \"lat\": 47.2357,\n    \"lon\": 39.7015\n  },\n  \"status\": \"operational\",\n  \"installedAt\": \"2025-06-10T09:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/equipment",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "equipment"]
+						},
+						"description": "Конфликт уникальности serialNumber."
+					}
+				},
+				{
+					"name": "409 Invalid request status transition",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('409 Conflict', function () {",
+									"  pm.response.to.have.status(409);",
+									"});",
+									"",
+									"pm.test('returns CONFLICT', function () {",
+									"  var json = pm.response.json();",
+									"  pm.expect(json.error.code).to.eql('CONFLICT');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"done\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/requests/{{requestId}}/status",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "requests", "{{requestId}}", "status"]
+						},
+						"description": "Недопустимый переход статуса: new -> done. Разрешены new -> in_progress/rejected."
+					}
+				},
+				{
+					"name": "429 Rate limit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('429 Too Many Requests', function () {",
+									"  pm.response.to.have.status(429);",
+									"});",
+									"",
+									"pm.test('returns RATE_LIMIT_EXCEEDED', function () {",
+									"  var json = pm.response.json();",
+									"  pm.expect(json.error.code).to.eql('RATE_LIMIT_EXCEEDED');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/health",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "health"]
+						},
+						"description": "Лимит: 100 запросов за 15 минут на /api. Чтобы увидеть 429, запустите этот запрос после превышения лимита."
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": ["pm.collectionVariables.set('runTimestamp', Date.now().toString());"]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "equipmentId",
+			"value": "f1fd5a7b-135a-4356-88b4-7d515194745d",
+			"type": "string"
+		},
+		{
+			"key": "requestId",
+			"value": "f06cb709-caeb-4578-89de-8eed78b2da90",
+			"type": "string"
+		},
+		{
+			"key": "createdEquipmentId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "createdRequestId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "notFoundId",
+			"value": "00000000-0000-4000-8000-000000000000",
+			"type": "string"
+		},
+		{
+			"key": "existingSerialNumber",
+			"value": "WG-2046-1111",
+			"type": "string"
+		}
+	]
+}
