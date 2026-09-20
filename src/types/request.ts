@@ -20,3 +20,6 @@ export type CreateMaintenanceRequestDto = Omit<
 	MaintenanceRequest,
 	'id' | 'status' | 'createdAt' | 'updatedAt'
 >
+export type UpdateMaintenanceRequestDto = Partial<
+	Omit<MaintenanceRequest, 'id' | 'equipmentId' | 'status' | 'createdAt' | 'updatedAt'>
+>

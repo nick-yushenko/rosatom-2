@@ -1,5 +1,6 @@
 import { requestPriorities, requestStatuses } from '@/types/request'
 import * as z from 'zod'
+import { paginationQueryShape, sortOrderSchema } from './commonValidator'
 
 export const requestIdParamsSchema = z.object({
 	id: z.uuid({ error: 'Некорректный id запроса на ремонт оборудования' }),
@@ -17,9 +18,11 @@ export const createRequestSchema = z.object({
 		.trim()
 		.max(2000, 'Описание должно быть не длиннее 2000 символов')
 		.optional(),
-	priority: z.enum(requestPriorities, {
-		message: 'Недопустимый приоритет запроса на ремонт оборудования',
-	}),
+	priority: z
+		.enum(requestPriorities, {
+			message: 'Недопустимый приоритет запроса на ремонт оборудования',
+		})
+		.default('medium'),
 	plannedAt: z.iso
 		.datetime('Планируемая дата ремонта должна быть ISO-датой')
 		.refine((value) => new Date(value) >= new Date(), {
@@ -44,18 +47,24 @@ export const updateRequestSchema = z
 		message: 'Нужно передать хотя бы одно поле для обновления',
 	})
 
-export const requestListQuerySchema = z.object({
-	status: z.enum(requestStatuses).optional(),
-	priority: z.enum(requestPriorities).optional(),
-	equipmentId: z.uuid({ error: 'Некорректный id оборудования' }).optional(),
+export const requestListQuerySchema = z
+	.object({
+		status: z.enum(requestStatuses).optional(),
+		priority: z.enum(requestPriorities).optional(),
+		equipmentId: z.uuid({ error: 'Некорректный id оборудования' }).optional(),
 
-	dateFrom: z.iso.datetime({ error: 'dateFrom должен быть ISO-дата-время' }).optional(),
-	dateTo: z.iso.datetime({ error: 'dateTo должен быть ISO-дата-время' }).optional(),
+		dateFrom: z.iso.datetime({ error: 'dateFrom должен быть ISO-дата-время' }).optional(),
+		dateTo: z.iso.datetime({ error: 'dateTo должен быть ISO-дата-время' }).optional(),
 
-	page: z.coerce.number().int().positive().default(1),
-	limit: z.coerce.number().int().positive().max(100).default(20),
+		sortBy: z
+			.enum(['createdAt', 'updatedAt', 'plannedAt', 'priority', 'status'], {
+				error: 'sortBy должен быть одним из: createdAt, updatedAt, plannedAt, priority, status',
+			})
+			.optional()
+			.default('createdAt'),
 
-	sortBy: z.enum(['createdAt', 'updatedAt', 'plannedAt', 'priority', 'status']).optional(),
+		sortOrder: sortOrderSchema,
+	})
+	.extend(paginationQueryShape)
 
-	sortOrder: z.enum(['asc', 'desc']).default('asc'),
-})
+export type RequestListQuery = z.infer<typeof requestListQuerySchema>
