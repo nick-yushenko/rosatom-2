@@ -33,7 +33,7 @@ export const createRequestSchema = z.object({
 export const updateRequestStatusSchema = z.object({
 	status: z.enum(requestStatuses, {
 		error: 'Недопустимый статус заявки',
-	}).default('new'),
+	}),
 })
 
 export const updateRequestSchema = z
