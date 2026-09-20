@@ -1,7 +1,5 @@
+import { requestPriorities, requestStatuses } from '@/types/request'
 import * as z from 'zod'
-
-const requestPriorities = ['low', 'medium', 'high', 'critical'] as const
-const requestStatuses = ['new', 'in_progress', 'done', 'rejected'] as const
 
 export const requestIdParamsSchema = z.object({
 	id: z.uuid({ error: 'Некорректный id запроса на ремонт оборудования' }),
@@ -10,7 +8,7 @@ export const requestIdParamsSchema = z.object({
 export const createRequestSchema = z.object({
 	equipmentId: z.uuid({ error: 'Некорректный id оборудования' }),
 	title: z
-		.string()
+		.string({ error: 'Поле обязательно для заполнения' })
 		.trim()
 		.min(5, 'Заголовок должен быть не короче 5 символов')
 		.max(120, 'Заголовок должен быть не длиннее 120 символов'),
@@ -22,10 +20,6 @@ export const createRequestSchema = z.object({
 	priority: z.enum(requestPriorities, {
 		message: 'Недопустимый приоритет запроса на ремонт оборудования',
 	}),
-	status: z.enum(requestStatuses, {
-		message: 'Недопустимый статус запроса на ремонт оборудования',
-	}),
-
 	plannedAt: z.iso
 		.datetime('Планируемая дата ремонта должна быть ISO-датой')
 		.refine((value) => new Date(value) >= new Date(), {
