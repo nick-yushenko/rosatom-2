@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "tsx watch src/server.ts",
 		"build": "tsc && tsc-alias",
-		"start": "node dist/server.js",
+		"start": "node dist/src/server.js",
 		"test": "node --test --import tsx test/**/*.test.ts",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
