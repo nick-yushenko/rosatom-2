@@ -94,7 +94,7 @@ export async function createRequest(
 		id: crypto.randomUUID(),
 		equipmentId: data.equipmentId,
 		description: data.description?.trim(),
-		status: 'new',
+		status: data.status,
 		createdAt: now,
 		updatedAt: now,
 		plannedAt: data.plannedAt,

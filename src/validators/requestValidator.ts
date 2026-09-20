@@ -22,7 +22,7 @@ export const createRequestSchema = z.object({
 		.enum(requestPriorities, {
 			message: 'Недопустимый приоритет запроса на ремонт оборудования',
 		})
-		.optional(),
+		.default('medium'),
 	plannedAt: z.iso
 		.datetime('Планируемая дата ремонта должна быть ISO-датой')
 		.refine((value) => new Date(value) >= new Date(), {
@@ -33,7 +33,7 @@ export const createRequestSchema = z.object({
 export const updateRequestStatusSchema = z.object({
 	status: z.enum(requestStatuses, {
 		error: 'Недопустимый статус заявки',
-	}),
+	}).default('new'),
 })
 
 export const updateRequestSchema = z

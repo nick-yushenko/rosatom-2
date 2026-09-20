@@ -51,7 +51,6 @@ export const updateEquipmentSchema = z
 		status: createEquipmentSchema.shape.status.optional(),
 		installedAt: createEquipmentSchema.shape.installedAt.optional(),
 	})
-	.strict()
 	.refine((data) => Object.keys(data).length > 0, {
 		message: 'Нужно передать хотя бы одно поле для обновления',
 	})

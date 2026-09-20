@@ -116,9 +116,9 @@ export async function updateEquipmentById(id: string, data: UpdateEquipmentDto) 
 }
 
 export async function deleteEquipmentById(id: string) {
-	const deleted = await equipmentRepository.remove(id)
+	const equipment = await equipmentRepository.findById(id)
 
-	if (!deleted) {
+	if (!equipment) {
 		throw new NotFoundError('Оборудование не найдено')
 	}
 
@@ -132,4 +132,6 @@ export async function deleteEquipmentById(id: string) {
 			},
 		])
 	}
+
+	await equipmentRepository.remove(id)
 }
