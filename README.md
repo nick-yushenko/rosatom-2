@@ -30,7 +30,7 @@ npm run format:check
 | ------------------------------ | ------------------------------------------------------ | ---------------------------------------- |
 | `NODE_ENV`                     | Окружение запуска                                      | `development`                            |
 | `PORT`                         | Порт сервера                                           | `3000`                                   |
-| `CORS_ORIGIN`                  | Разрешенный origin для CORS                            | `*`                                      |
+| `CORS_ORIGIN`                  | Разрешенный origin для CORS                            | `http://localhost:5173`                                      |
 | `LOG_LEVEL`                    | Уровень логирования                                    | `info`                                   |
 | `WEATHER_FORECAST_API_URL`     | URL API прогноза погоды                                | `https://api.open-meteo.com/v1/forecast` |
 | `WEATHER_FORECAST_DAYS`        | Количество дней прогноза                               | `3`                                      |
@@ -389,7 +389,6 @@ GET /api/equipment?status=broken&page=1&limit=20
 - CORS настраивается через `CORS_ORIGIN`.
 - Тело запроса принимается в формате JSON через `express.json()`.
 - Лимит пагинации: `limit` не больше `100`.
-- Rate limit пока не реализован.
 
 ## Хранение данных
 
